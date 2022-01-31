@@ -5,61 +5,32 @@ using UnityEngine;
 
 public class GraphNode : Node
 {
-    public enum Type
-    {
-        DEFAULT,
-        SOURCE,
-        DESTINATION,
-        PATH,
-        VISITED
-    }
-
-    Color[] colors =
-    {
-        Color.white,
-        Color.green,
-        Color.red,
-        Color.yellow,
-        Color.magenta
-    };
-
-    public struct Edge
-    {
-        public GraphNode nodeA;
-        public GraphNode nodeB;
-    }
-
     public GraphNode parent { get; set; } = null;
-    public List<Edge> edges { get; set; } = new List<Edge>();
-    public Type type { get; set; } = Type.DEFAULT;
     public bool visited { get; set; } = false;
+    public float cost { get; set; } = float.MaxValue;
+    public List<GraphNode> neighbors { get; set; } = new List<GraphNode>();
 
-    void Update()
+    private void OnTriggerStay(Collider other)
     {
-        // update node color using current node type
-        GetComponent<Renderer>().material.color = colors[(int)type];
-        // draw edges
-        edges.ForEach(edge => Debug.DrawLine(edge.nodeA.transform.position, edge.nodeB.transform.position));
-    }
-
-    public static GraphNode GetNode(Type type)
-    {
-        // get first node of type
-        var nodes = GetNodes<GraphNode>();
-        var node = nodes.FirstOrDefault(node => node.type == type);
-
-        return node;
+        if (other.gameObject.TryGetComponent<SearchAgent>(out SearchAgent searchAgent))
+        {
+            if (searchAgent.targetNode == this)
+            {
+                searchAgent.targetNode = searchAgent.GetNextNode(this);
+            }
+        }
     }
 
     public static void UnlinkNodes()
     {
         // clear all nodes edges
         var nodes = GetNodes<GraphNode>();
-        nodes.ToList().ForEach(node => node.edges.Clear());
+        nodes.ToList().ForEach(node => node.neighbors.Clear());
     }
 
     public static void LinkNodes(float radius)
     {
+        // link all nodes to neighbor nodes within radius
         var nodes = GetNodes<GraphNode>();
         nodes.ToList().ForEach(node => LinkNeighbors(node, radius));
     }
@@ -74,33 +45,20 @@ public class GraphNode : Node
             GraphNode colliderNode = collider.GetComponent<GraphNode>();
             if (colliderNode != null && colliderNode != node)
             {
-                // create edge from node to collider node
-                Edge edge;
-                edge.nodeA = node;
-                edge.nodeB = colliderNode;
-
-                // add edge to node edges
-                node.edges.Add(edge);
+                node.neighbors.Add(colliderNode);
             }
         }
-    }
-    
-    public static void SetNodeType(Type typeFrom, Type typeTo)
-    {
-        var nodes = GetNodes<GraphNode>();
-
-        var result = nodes.Where(node => node.type == typeFrom);
-        result.ToList().ForEach(node => node.type = typeTo);
     }
 
     public static void ResetNodes()
     {
-        // reset path and visited nodes
-        SetNodeType(Type.PATH, Type.DEFAULT);
-        SetNodeType(Type.VISITED, Type.DEFAULT);
-
-        // set nodes not visited and parent to null
+        // reset nodes visited and parent
         var nodes = GetNodes<GraphNode>();
-        nodes.ToList().ForEach(node => { node.visited = false; node.parent = null; });
+        nodes.ToList().ForEach(node => { node.visited = false; node.parent = null; node.cost = float.MaxValue; });
+    }
+
+    public float DistanceTo(GraphNode node)
+    {
+        return Vector3.Distance(transform.position, node.transform.position);
     }
 }
