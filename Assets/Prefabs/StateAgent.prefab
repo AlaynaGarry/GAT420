@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: -5075299627310519261}
   - component: {fileID: -8319243388972703051}
   - component: {fileID: -8232159018274765290}
+  - component: {fileID: 7656708248379899180}
   - component: {fileID: 7857037719415794564}
   m_Layer: 0
   m_Name: StateAgent
@@ -163,7 +164,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement: {fileID: -8319243388972703051}
   animator: {fileID: 5866666020866159537}
-  path: {fileID: 0}
+  pathFollower: {fileID: -8232159018274765290}
+  enemySeen:
+    value: 0
+  health:
+    value: 0
+  timer:
+    value: 0
 --- !u!114 &-8319243388972703051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,6 +197,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathNodes: {fileID: 0}
+--- !u!114 &7656708248379899180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5099825287825990427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91d54864943103546ba24a090db01557, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tagName: Player
+  raycastTransform: {fileID: 998351596078810690}
+  distance: 4
+  angle: 80
+  numRaycast: 20
 --- !u!195 &7857037719415794564
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -10,8 +10,9 @@ public class IdleState : State
 
     public override void OnEnter()
     {
-        timer = 2;
         Debug.Log(name + " enter");
+        owner.movement.Stop();
+        owner.timer.value = 2;
     }
 
     public override void OnExit()
