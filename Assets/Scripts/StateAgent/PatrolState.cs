@@ -10,20 +10,15 @@ public class PatrolState : State
     {
         owner.pathFollower.targetNode = owner.pathFollower.pathNodes.GetNearestNode(owner.transform.position);
         owner.movement.Resume();
-        Debug.Log(name + " enter");
     }
 
     public override void OnExit()
     {
-        owner.movement.Stop();
-
-        Debug.Log(name + " exit");
+        owner.movement.Stop(); 
     }
 
     public override void OnUpdate()
     {
-        Debug.Log(name + " update");
-
         owner.pathFollower.Move(owner.movement);
 
         if (Input.GetKeyDown(KeyCode.Space))
