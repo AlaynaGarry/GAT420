@@ -9,11 +9,7 @@ public class NavMeshMovement : Movement
 {
 
     public override Vector3 velocity { get => navMeshAgent.velocity; set => navMeshAgent.velocity = value; }
-    NavMeshAgent navMeshAgent;
-    void Start()
-    {
-        navMeshAgent = GetComponent<NavMeshAgent>();
-    }
+    public NavMeshAgent navMeshAgent;
 
     void Update()
     {
